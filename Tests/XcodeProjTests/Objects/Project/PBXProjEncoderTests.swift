@@ -321,7 +321,7 @@ class PBXProjEncoderTests: XCTestCase {
     }
 
     private func lines(fromFile file: String) -> [String] {
-        file.replacingOccurrences(of: "\t", with: "").components(separatedBy: "\n")
+        file.replacingOccurrences(of: "\t", with: "").components(separatedBy: Platform.lineTerminator)
     }
 }
 

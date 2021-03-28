@@ -7,6 +7,7 @@ class CommentedStringTests: XCTestCase {
     func test_commentedStringEscaping() {
         let quote = "\""
         let escapedNewline = "\\n"
+        let escapedWindowsNewLine = "\\r\\n"
         let escapedQuote = "\\\""
         let escapedEscape = "\\\\"
         let escapedTab = "\\t"
@@ -46,6 +47,15 @@ class CommentedStringTests: XCTestCase {
             "a\na".quoted: "\(escapedQuote)a\(escapedNewline)a\(escapedQuote)".quoted,
             "a\(escapedNewline)a": "a\(escapedEscape)na".quoted,
             "a\(escapedNewline)a".quoted: "\(escapedQuote)a\(escapedEscape)na\(escapedQuote)".quoted,
+            // Windows (start)
+            "a\r\na": "a\\r\\na".quoted,
+            "\r\n": escapedWindowsNewLine.quoted,
+            "\r\na": "\(escapedWindowsNewLine)a".quoted,
+            "a\r\n": "a\(escapedWindowsNewLine)".quoted,
+            "a\r\na".quoted: "\(escapedQuote)a\(escapedWindowsNewLine)a\(escapedQuote)".quoted,
+            "a\(escapedWindowsNewLine)a": "a\(escapedEscape)r\(escapedEscape)na".quoted,
+            "a\(escapedWindowsNewLine)a".quoted: "\(escapedQuote)a\(escapedEscape)r\(escapedEscape)na\(escapedQuote)".quoted,
+            // Windows (end)
             "\"": escapedQuote.quoted,
             "\"\"": "\(escapedQuote)\(escapedQuote)".quoted,
             "".quoted.quoted: "\(escapedQuote)\(escapedQuote)\(escapedQuote)\(escapedQuote)".quoted,

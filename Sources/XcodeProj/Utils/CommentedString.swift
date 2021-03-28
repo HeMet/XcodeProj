@@ -94,17 +94,23 @@ struct CommentedString {
                     }
                 }
             }
-            // As an optimization, only look at the first scalar. This means we're doing a numeric comparison instead
-            // of comparing arbitrary-length characters. This is safe because all our cases are a single scalar.
-            switch character.unicodeScalars.first {
-            case "\\":
+            // As an optimization, only look at first two scalars. This means we're doing a numeric comparison instead
+            // of comparing arbitrary-length characters. This is safe because all our cases are either single or double scalars.
+            var secondScalar: Unicode.Scalar?
+            if character.unicodeScalars.count == 2 {
+                secondScalar = character.unicodeScalars.last
+            }
+            switch (character.unicodeScalars.first, secondScalar) {
+            case ("\\", nil):
                 escaped.append("\\\\")
-            case "\"":
+            case ("\"", nil):
                 escaped.append("\\\"")
-            case "\t":
+            case ("\t", nil):
                 escaped.append("\\t")
-            case "\n":
+            case ("\n", nil):
                 escaped.append("\\n")
+            case ("\r", "\n"):
+                escaped.append("\\r\\n")
             default:
                 escaped.append(character)
             }

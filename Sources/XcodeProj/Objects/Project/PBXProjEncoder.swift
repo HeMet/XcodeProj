@@ -248,7 +248,7 @@ final class PBXProjEncoder {
 
     private func writeNewLine(stateHolder: inout StateHolder, to output: inout [String]) {
         if stateHolder.multiline {
-            output.append("\n")
+            output.append(Platform.lineTerminator)
         } else {
             output.append(" ")
         }

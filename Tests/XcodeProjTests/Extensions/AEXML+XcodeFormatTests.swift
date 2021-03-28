@@ -5,7 +5,7 @@ import XCTest
 
 extension String {
     var cleaned: String {
-        replacingOccurrences(of: "   ", with: "").components(separatedBy: "\n").filter { !$0.isEmpty }.joined(separator: " ")
+        replacingOccurrences(of: "   ", with: "").components(separatedBy: Platform.lineTerminator).filter { !$0.isEmpty }.joined(separator: " ")
     }
 }
 
@@ -19,6 +19,7 @@ class AEXML_XcodeFormatTests: XCTestCase {
            runPostActionsOnFailure = "YES">
         </BuildAction>
         """
+        .withPlatformLineTerminator
 
     func test_BuildAction_attributes_sorted_when_original_sorted() {
         validateAttributes(attributes: [

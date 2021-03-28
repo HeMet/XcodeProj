@@ -32,7 +32,7 @@ public final class XCConfig {
     /// - Throws: an error if the config file cannot be found or it has an invalid format.
     public init(path: Path, projectPath: Path? = nil) throws {
         if !path.exists { throw XCConfigError.notFound(path: path) }
-        let fileLines = try path.read().components(separatedBy: "\n")
+        let fileLines = try path.read().components(separatedBy: Platform.lineTerminator)
         includes = fileLines
             .compactMap(XCConfigParser.configFrom(path: path, projectPath: projectPath))
         var buildSettings: [String: String] = [:]
@@ -145,7 +145,7 @@ extension XCConfig: Writable {
     public func write(path: Path, override: Bool) throws {
         var content = ""
         content.append(writeIncludes())
-        content.append("\n")
+        content.append(Platform.lineTerminator)
         content.append(writeBuildSettings())
         if override, path.exists {
             try path.delete()
@@ -156,18 +156,18 @@ extension XCConfig: Writable {
     private func writeIncludes() -> String {
         var content = ""
         includes.forEach { include in
-            content.append("#include \"\(include.0.string)\"\n")
+            content.append("#include \"\(include.0.string)\"\(Platform.lineTerminator)")
         }
-        content.append("\n")
+        content.append(Platform.lineTerminator)
         return content
     }
 
     private func writeBuildSettings() -> String {
         var content = ""
         buildSettings.forEach { key, value in
-            content.append("\(key) = \(value)\n")
+            content.append("\(key) = \(value)\(Platform.lineTerminator)")
         }
-        content.append("\n")
+        content.append(Platform.lineTerminator)
         return content
     }
 }

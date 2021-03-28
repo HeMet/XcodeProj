@@ -25,11 +25,6 @@ final class PBXProjIntegrationTests: XCTestCase {
     }
 
     func test_write_produces_no_diff() throws {
-        #if os(Windows)
-            XCTSkip("Windows: files encoded with `\\n` but original uses `\\r\\n`")
-            return
-        #endif
-
         let tmpDir = try Path.uniqueTemporary()
         defer {
             try? tmpDir.delete()
@@ -53,8 +48,6 @@ final class PBXProjIntegrationTests: XCTestCase {
             try project.writePBXProj(path: xcodeprojPath, outputSettings: PBXOutputSettings())
 
             let got = try checkedOutput("git", ["status"])
-            // TODO: [NEW LINES]
-            // fails since terminator changed from platform to \n
             XCTAssertTrue(got?.contains("nothing to commit") ?? false)
         }
     }

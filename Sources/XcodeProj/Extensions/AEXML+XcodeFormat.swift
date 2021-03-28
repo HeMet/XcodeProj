@@ -3,8 +3,8 @@ import Foundation
 
 extension AEXMLDocument {
     var xmlXcodeFormat: String {
-        var xml = "<?xml version=\"\(options.documentHeader.version)\" encoding=\"\(options.documentHeader.encoding.uppercased())\"?>\n"
-        xml += root._xmlXcodeFormat + "\n"
+        var xml = "<?xml version=\"\(options.documentHeader.version)\" encoding=\"\(options.documentHeader.encoding.uppercased())\"?>\(Platform.lineTerminator)"
+        xml += root._xmlXcodeFormat + Platform.lineTerminator
         return xml
     }
 }
@@ -101,7 +101,7 @@ extension AEXMLElement {
         xml += "<\(name)"
 
         func print(key: String, value: String) {
-            xml += "\n"
+            xml += Platform.lineTerminator
             xml += indent(withDepth: parentsCount)
             xml += "\(key) = \"\(value.xmlEscaped)\""
         }
@@ -123,19 +123,19 @@ extension AEXMLElement {
 
         if value == nil, children.isEmpty {
             // close element
-            xml += ">\n"
+            xml += ">\(Platform.lineTerminator)"
         } else {
             if !children.isEmpty {
                 // add children
-                xml += ">\n"
+                xml += ">\(Platform.lineTerminator)"
                 for child in children {
-                    xml += "\(child._xmlXcodeFormat)\n"
+                    xml += "\(child._xmlXcodeFormat)\(Platform.lineTerminator)"
                 }
             } else {
                 // insert string value and close element
-                xml += ">\n"
+                xml += ">\(Platform.lineTerminator)"
                 xml += indent(withDepth: parentsCount - 1)
-                xml += ">\n\(string.xmlEscaped)"
+                xml += ">\(Platform.lineTerminator)\(string.xmlEscaped)"
             }
         }
 
