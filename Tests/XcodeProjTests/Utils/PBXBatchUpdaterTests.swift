@@ -29,6 +29,11 @@ class PBXBatchUpdaterTests: XCTestCase {
     }
 
     func test_addFile_withSubgroups() {
+        #if os(Windows)
+            XCTSkip("Windows: path is too long")
+            return
+        #endif
+        
         let sourceRoot = Path.temporary
         let mainGroupPath = UUID().uuidString
         let proj = fillAndCreateProj(
@@ -117,6 +122,11 @@ class PBXBatchUpdaterTests: XCTestCase {
     }
 
     func test_addFile_alreadyExistedWithSubgroups() {
+        #if os(Windows)
+            XCTSkip("Windows: path is too long")
+            return
+        #endif
+
         let sourceRoot = Path.temporary
         let mainGroupPath = UUID().uuidString
         let proj = fillAndCreateProj(
