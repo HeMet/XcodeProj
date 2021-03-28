@@ -28,12 +28,7 @@ class PBXBatchUpdaterTests: XCTestCase {
         XCTAssertEqual(proj.groups.count, 1)
     }
 
-    func test_addFile_withSubgroups() {
-        #if os(Windows)
-            XCTSkip("Windows: path is too long")
-            return
-        #endif
-        
+    func test_addFile_withSubgroups() {        
         let sourceRoot = Path.temporary
         let mainGroupPath = UUID().uuidString
         let proj = fillAndCreateProj(
@@ -41,12 +36,16 @@ class PBXBatchUpdaterTests: XCTestCase {
             mainGroupPath: mainGroupPath
         )
         let project = proj.projects.first!
-        let subgroupNames = (0 ... 5).map { _ in UUID().uuidString }
+        #if os(Windows)
+            // use shorter names to avoid too long paths on Windows
+            let subgroupNames = (0 ... 5).map { _ in String(UUID().uuidString.prefix(8)) }
+        #else
+            let subgroupNames = (0 ... 5).map { _ in UUID().uuidString }
+        #endif
         let expectedGroupCount = 1 + subgroupNames.count
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
             let subgroupPath = subgroupNames.joined(separator: "/")
-            // this path is to long for Windows 
             let filePath = sourceRoot + "\(mainGroupPath)/\(subgroupPath)/\(fileName)"
             try createFile(at: filePath)
             let file = try updater.addFile(to: project, at: filePath)
@@ -122,11 +121,6 @@ class PBXBatchUpdaterTests: XCTestCase {
     }
 
     func test_addFile_alreadyExistedWithSubgroups() {
-        #if os(Windows)
-            XCTSkip("Windows: path is too long")
-            return
-        #endif
-
         let sourceRoot = Path.temporary
         let mainGroupPath = UUID().uuidString
         let proj = fillAndCreateProj(
@@ -134,12 +128,16 @@ class PBXBatchUpdaterTests: XCTestCase {
             mainGroupPath: mainGroupPath
         )
         let project = proj.projects.first!
-        let subgroupNames = (0 ... 5).map { _ in UUID().uuidString }
+        #if os(Windows)
+            // use shorter names to avoid too long paths on Windows
+            let subgroupNames = (0 ... 5).map { _ in String(UUID().uuidString.prefix(8)) }
+        #else
+            let subgroupNames = (0 ... 5).map { _ in UUID().uuidString }
+        #endif
         let expectedGroupCount = 1 + subgroupNames.count
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
             let subgroupPath = subgroupNames.joined(separator: "/")
-            // this path is to long for Windows
             let filePath = sourceRoot + "\(mainGroupPath)/\(subgroupPath)/\(fileName)"
             try createFile(at: filePath)
             let firstFile = try updater.addFile(to: project, at: filePath)
