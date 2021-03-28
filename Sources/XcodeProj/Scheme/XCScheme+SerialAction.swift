@@ -39,11 +39,19 @@ extension XCScheme {
 
         // MARK: - Equatable
 
+        #if os(Windows)
+        dynamic func isEqual(to: Any?) -> Bool {
+            guard let rhs = to as? SerialAction else { return false }
+            return preActions == rhs.preActions &&
+                postActions == rhs.postActions
+        }
+        #else
         @objc dynamic func isEqual(to: Any?) -> Bool {
             guard let rhs = to as? SerialAction else { return false }
             return preActions == rhs.preActions &&
                 postActions == rhs.postActions
         }
+        #endif
 
         public static func == (lhs: SerialAction, rhs: SerialAction) -> Bool {
             lhs.isEqual(to: rhs)
