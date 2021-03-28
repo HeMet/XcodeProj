@@ -105,7 +105,7 @@ private func checkedOutput(_ executable: String, _ args: [String]) throws -> Str
 
     process.arguments = args
     process.standardOutput = output
-    process.launch()
+    try process.run()
     process.waitUntilExit()
 
     guard process.terminationStatus == 0 else {
