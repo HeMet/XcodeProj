@@ -14,7 +14,7 @@ class PBXBatchUpdaterTests: XCTestCase {
         let project = proj.projects.first!
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
-            let filePath = Path("\(sourceRoot.string)\(mainGroupPath)/\(fileName)")
+            let filePath = sourceRoot + "\(mainGroupPath)/\(fileName)"
             try createFile(at: filePath)
             let file = try updater.addFile(to: project, at: filePath)
             let fileFullPath = try file.fullPath(sourceRoot: sourceRoot)
@@ -41,7 +41,8 @@ class PBXBatchUpdaterTests: XCTestCase {
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
             let subgroupPath = subgroupNames.joined(separator: "/")
-            let filePath = Path("\(sourceRoot.string)\(mainGroupPath)/\(subgroupPath)/\(fileName)")
+            // this path is to long for Windows 
+            let filePath = sourceRoot + "\(mainGroupPath)/\(subgroupPath)/\(fileName)"
             try createFile(at: filePath)
             let file = try updater.addFile(to: project, at: filePath)
             let fileFullPath = try file.fullPath(sourceRoot: sourceRoot)
@@ -66,7 +67,7 @@ class PBXBatchUpdaterTests: XCTestCase {
         let mainGroup = project.mainGroup!
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
-            let filePath = Path("\(sourceRoot.string)\(mainGroupPath)/\(fileName)")
+            let filePath = sourceRoot + "\(mainGroupPath)/\(fileName)"
             try createFile(at: filePath)
             let file = try updater.addFile(to: mainGroup, fileName: fileName)
             let fileFullPath = try file.fullPath(sourceRoot: sourceRoot)
@@ -91,7 +92,7 @@ class PBXBatchUpdaterTests: XCTestCase {
         let mainGroup = project.mainGroup!
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
-            let filePath = Path("\(sourceRoot.string)\(mainGroupPath)/\(fileName)")
+            let filePath = sourceRoot + "\(mainGroupPath)/\(fileName)"
             try createFile(at: filePath)
             let firstFile = try updater.addFile(to: project, at: filePath)
             let secondFile = try updater.addFile(to: mainGroup, fileName: fileName)
@@ -128,7 +129,8 @@ class PBXBatchUpdaterTests: XCTestCase {
         try! proj.batchUpdate(sourceRoot: sourceRoot) { updater in
             let fileName = "file.swift"
             let subgroupPath = subgroupNames.joined(separator: "/")
-            let filePath = Path("\(sourceRoot.string)\(mainGroupPath)/\(subgroupPath)/\(fileName)")
+            // this path is to long for Windows
+            let filePath = sourceRoot + "\(mainGroupPath)/\(subgroupPath)/\(fileName)"
             try createFile(at: filePath)
             let firstFile = try updater.addFile(to: project, at: filePath)
             let parentGroup = proj.groups.first(where: { $0.path == subgroupNames.last! })!
