@@ -48,6 +48,8 @@ final class PBXProjIntegrationTests: XCTestCase {
             try project.writePBXProj(path: xcodeprojPath, outputSettings: PBXOutputSettings())
 
             let got = try checkedOutput("git", ["status"])
+            // TODO: [NEW LINES]
+            // fails since terminator changed from platform to \n
             XCTAssertTrue(got?.contains("nothing to commit") ?? false)
         }
     }
