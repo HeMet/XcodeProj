@@ -91,10 +91,16 @@ private func checkedOutput(_ executable: String, _ args: [String]) throws -> Str
     let process = Process()
     let output = Pipe()
 
+    #if os(Windows)
+    let executableLocator = "C:/Windows/System32/where.exe"
+    #else
+    let executableLocator = "/usr/bin/which"
+    #endif
+
     if executable.contains("/") {
         process.launchPath = executable
     } else {
-        process.launchPath = try checkedOutput("/usr/bin/which", [executable])?.trimmingCharacters(in: .newlines)
+        process.launchPath = try checkedOutput(executableLocator, [executable])?.trimmingCharacters(in: .newlines)
     }
 
     process.arguments = args
