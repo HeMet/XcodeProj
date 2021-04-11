@@ -13,8 +13,21 @@ extension Path {
     }
 
     func relative(to path: Path) -> Path {
-        let pathComponents = absolute().components
-        let baseComponents = path.absolute().components
+        var pathComponents = absolute().components
+        var baseComponents = path.absolute().components
+
+        #if os(Windows)
+        if let pathFirst = pathComponents.first, let baseFirst = baseComponents.first {
+            if pathFirst != baseFirst, pathFirst.hasSuffix(":") && baseFirst.hasSuffix(":") {
+                // paths with different volumes have no common root
+                return self
+            }
+            if (pathFirst == "/" && baseFirst.hasSuffix(":")) || (pathFirst.hasSuffix(":") && baseFirst == "/") {
+                pathComponents.removeFirst()
+                baseComponents.removeFirst()
+            }
+        }
+        #endif
 
         var commonComponents = 0
         for (index, component) in baseComponents.enumerated() {

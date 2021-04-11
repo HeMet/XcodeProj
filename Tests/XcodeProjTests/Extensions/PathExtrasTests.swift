@@ -9,7 +9,17 @@ final class PathExtrasTests: XCTestCase {
 
     func testThat_GivenAbsolutePath_WhenRelativeToNotSuperseedingAbsolutePath_ThenResultHasDoubleDot() {
         XCTAssertEqual(Path("/absolute/dir/file.txt").relative(to: Path("/absolute/anotherDir")), Path("../dir/file.txt"))
+        #if os(Windows)
+        XCTAssertEqual(Path("C:/absolute/dir/file.txt").relative(to: Path("/absolute/anotherDir")), Path("../dir/file.txt"))
+        XCTAssertEqual(Path("/absolute/dir/file.txt").relative(to: Path("C:/absolute/anotherDir")), Path("../dir/file.txt"))
+        #endif
     }
+
+    #if os(Windows)
+    func testThat_GivenAbsolutePath_WhenRelativeToAbsolutePathOnDifferentVolume_ThenResultIsThePathItself() {
+        XCTAssertEqual(Path("D:/absolute/dir/file.txt").relative(to: Path("C:/absolute/anotherDir")), Path("D:/absolute/dir/file.txt"))
+    }
+    #endif
 
     func testThat_GivenAbsoluteSubPath_WhenRelativeToIntersectingAbsolutePath_ThenResultIsTheFullPathToTheRootAndThenFullAbsolutePath() {
         XCTAssertEqual(Path("/absolute/dir/file.txt").relative(to: Path("/var")), Path("../absolute/dir/file.txt"))
